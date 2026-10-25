@@ -1,4 +1,4 @@
-# Sangrah — a directory of GLAMs in India
+# Sangrah- GLAMs in India
 
 An open, community-maintained directory of **galleries, libraries, archives and museums** across India. Plain HTML, CSS and JavaScript, so it runs on GitHub Pages with no build step.
 
