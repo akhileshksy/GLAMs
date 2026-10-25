@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sangrah — A Directory of GLAMs in India</title>
+<meta name="description" content="An open, community-maintained directory of galleries, libraries, archives and museums (GLAMs) across India. Search, filter by state and type, explore on a map.">
+<meta property="og:title" content="Sangrah — A Directory of GLAMs in India">
+<meta property="og:description" content="Galleries, libraries, archives and museums across India, in one open directory.">
+<meta name="theme-color" content="#F4EEE1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23B23A1E'/%3E%3Cpath d='M12 26 32 12l20 14v4H12zM16 34h6v14h-6zm13 0h6v14h-6zm13 0h6v14h-6zM12 52h40v4H12z' fill='%23F4EEE1'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700&family=Noto+Serif+Devanagari:wght@600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="assets/style.css">
+<script>
+  try { var t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
+</head>
+<body>
+<a class="skip" href="#directory">Skip to directory</a>
+
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="#" aria-label="Sangrah home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 64 64" width="28" height="28"><path d="M8 26 32 9l24 17v4H8zM13 36h7v14h-7zm15.5 0h7v14h-7zM44 36h7v14h-7zM8 54h48v4H8z" fill="currentColor"/></svg>
+      </span>
+      <span class="brand-name">Sangrah</span>
+    </a>
+    <nav class="top-nav" aria-label="Primary">
+      <a href="#directory">Directory</a>
+      <a href="#map-section">Map</a>
+      <a href="#about">About</a>
+      <a href="#contribute">Contribute</a>
+    </nav>
+    <button class="icon-btn" id="theme" type="button" aria-label="Toggle dark mode">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow">Galleries · Libraries · Archives · Museums</p>
+        <h1>The memory institutions of <span class="deva" lang="hi">भारत</span>, in one place.</h1>
+        <p class="lede">An open, community-maintained directory of the places that hold India's art, books, records and objects. Find an institution, see where it is, and go to its source.</p>
+        <div class="hero-cta">
+          <a class="btn primary" href="#directory">Browse the directory</a>
+          <a class="btn" href="#contribute">Add an institution</a>
+        </div>
+      </div>
+      <dl class="stats" id="stats" aria-label="Directory statistics">
+        <div class="stat" data-type="museum"><dt>Museums</dt><dd data-count="0">0</dd></div>
+        <div class="stat" data-type="library"><dt>Libraries</dt><dd data-count="0">0</dd></div>
+        <div class="stat" data-type="archive"><dt>Archives</dt><dd data-count="0">0</dd></div>
+        <div class="stat" data-type="gallery"><dt>Galleries</dt><dd data-count="0">0</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section id="directory" class="wrap section">
+    <div class="section-head">
+      <h2>Directory</h2>
+      <p class="muted" id="result-count" aria-live="polite"></p>
+    </div>
+
+    <form class="filters" id="filters" role="search" onsubmit="return false">
+      <div class="search">
+        <label for="q" class="sr">Search institutions</label>
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="q" type="search" placeholder="Search by name, city, topic or tag" autocomplete="off">
+      </div>
+      <div class="chips" id="type-chips" role="group" aria-label="Filter by type"></div>
+      <div class="selects">
+        <label class="sel"><span>State / UT</span>
+          <select id="state"><option value="">All states</option></select>
+        </label>
+        <label class="sel"><span>Sort by</span>
+          <select id="sort">
+            <option value="name">Name (A–Z)</option>
+            <option value="oldest">Oldest first</option>
+            <option value="newest">Newest first</option>
+            <option value="state">State</option>
+          </select>
+        </label>
+        <div class="seg" role="group" aria-label="View">
+          <button type="button" id="v-grid" aria-pressed="true">Cards</button>
+          <button type="button" id="v-list" aria-pressed="false">List</button>
+        </div>
+        <button class="btn small" type="button" id="reset">Reset</button>
+        <button class="btn small" type="button" id="csv">Download CSV</button>
+      </div>
+    </form>
+
+    <div id="results" class="grid" aria-live="polite"></div>
+    <p id="empty" class="empty" hidden>No institutions match these filters. Try clearing the search, or <a href="#contribute">add the one you are looking for</a>.</p>
+  </section>
+
+  <section id="map-section" class="section map-band">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>On the map</h2>
+        <p class="muted">The map follows your filters. Select a pin for details.</p>
+      </div>
+      <div id="map" role="region" aria-label="Map of institutions"></div>
+      <p class="muted small-note">Locations are approximate to the neighbourhood. Map tiles © OpenStreetMap contributors.</p>
+    </div>
+  </section>
+
+  <section id="about" class="wrap section about">
+    <div class="about-grid">
+      <div>
+        <h2>About this directory</h2>
+        <p>GLAM is the shorthand used by cultural heritage professionals for <strong>galleries, libraries, archives and museums</strong>: institutions that collect, preserve and share knowledge. India has thousands of them, from national bodies to small community collections, but there is no single open list.</p>
+        <p>Sangrah (<span lang="hi">संग्रह</span>, “a collection”) starts with well-known institutions and is built to grow through contributions. Everything lives in one JSON file in the repository, so it is easy to reuse, check and improve.</p>
+      </div>
+      <ul class="facts">
+        <li><strong>Open data.</strong> <code>data/glams.json</code>, reusable under CC0.</li>
+        <li><strong>No server.</strong> Plain HTML, CSS and JavaScript on GitHub Pages.</li>
+        <li><strong>Sources first.</strong> Each entry links to the institution's own site where one exists.</li>
+        <li><strong>Check before you travel.</strong> Hours, tickets and access rules change; confirm on the official site.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="contribute" class="wrap section contribute">
+    <h2>Contribute</h2>
+    <div class="steps">
+      <div><span class="num">1</span><h3>Suggest an entry</h3><p>Open an issue with the institution's name, city, type and official website.</p></div>
+      <div><span class="num">2</span><h3>Or edit the data</h3><p>Add an object to <code>data/glams.json</code> and open a pull request.</p></div>
+      <div><span class="num">3</span><h3>Fix what's wrong</h3><p>Broken link, wrong year, wrong pin? Tell us and cite a source.</p></div>
+    </div>
+    <p><a class="btn primary" id="gh-issue" href="https://github.com/YOUR-USERNAME/glam-india/issues/new?template=add-institution.yml" target="_blank" rel="noopener">Add an institution on GitHub</a></p>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <p>Sangrah · open directory of GLAMs in India. Data: CC0 · Code: MIT.</p>
+    <p class="muted"><a id="gh-repo" href="https://github.com/YOUR-USERNAME/glam-india" target="_blank" rel="noopener">Source on GitHub</a></p>
+  </div>
+</footer>
+
+<dialog id="detail" aria-labelledby="d-title">
+  <form method="dialog"><button class="close" aria-label="Close">×</button></form>
+  <div id="d-body"></div>
+</dialog>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
